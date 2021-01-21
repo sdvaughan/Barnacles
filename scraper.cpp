@@ -1,7 +1,7 @@
 // Barnacles List Scraper
 // Author: Steven D. Vaughan
 
-// This program is used to retrieve a new-line separated list of URLs from a user-defined URL, 
+// This program is used to retrieve a new-line separated list of URLs from a user-defined URL,
 // then scrapes each URL for keywords of the user's choice.
 
 #include <iostream>
@@ -10,6 +10,7 @@
 #include <sstream>
 #include <thread>
 #include <vector>
+#include <bits/stdc++.h>
 
 CURL* easy;	// Create cURL interface
 
@@ -47,21 +48,40 @@ int removeProxy(){								// Remove HTTP proxy
 
 int main(int argc, char * argv[])
 {
+    std::vector<std::string> foundUrls;
 
     if (argc < 2) {
-        std::cout << "Usage: ./scraper <URL>" << std::endl;
+        std::cout << "Usage: ./scraper <URL> <keyword>" << std::endl;
         std::cout << "URL: URL pointing to list of URLs to be scraped" << std::endl;
+        std::cout << "keyword: keyword to be searched for" << std::endl;
         exit(1);
     }
 
-    initializeCurl();								// Initialize 
-    std::string urlList = retrieveURL(argv[1]);					// Retrieve list of URLs from user-provided URL
-    std::istringstream s(urlList);						// Create string stream for line-by-line iteration
-    std::string line;    							// Line buffer
+    std::cout << "List URL: " << argv[1] << std::endl;
+    std::cout << "Keyword: " << argv[2] << std::endl;
 
-    while (std::getline(s, line)) {						// Retrieve next URL in list
-	std::string response = retrieveURL(line.c_str());			// Retrieve data from URL
-	std::cout << response.c_str() << std::endl;				// Print data to stdout (**debug**)
+    initializeCurl();									// Initialize
+    std::string urlList = retrieveURL(argv[1]);						// Retrieve list of URLs from user-provided URL
+    std::istringstream s(urlList);							// Create string stream for line-by-line iteration
+    std::string line;    								// Line buffer
+
+    while (std::getline(s, line)) {							// Retrieve next URL in list
+	std::string response = retrieveURL(line.c_str());				// Retrieve data from URL
+//	std::cout << response.c_str() << std::endl;					// Print data to stdout (**debug**)
+        std::transform(response.begin(), response.end(), response.begin(), ::tolower);	// Convert response to lowercase for search
+        std::size_t found = response.find(argv[2]);					// Search for keyword
+        if (found != std::string::npos) {
+            foundUrls.push_back(line);
+	    std::cout << "Found Keyword!" << std::endl;
+        }
+    }
+
+    std::cout << std::endl << std::endl;
+
+    std::vector<std::string>::iterator foundUrlsIt;
+
+    for (foundUrlsIt = foundUrls.begin(); foundUrlsIt != foundUrls.end(); foundUrlsIt++){
+	std::cout << *foundUrlsIt << std::endl;
     }
 
     return 0;
