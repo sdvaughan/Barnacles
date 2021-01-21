@@ -10,3 +10,6 @@ This can be especially useful for:
   
     ...and much more!
     
+TODO:
+  - Keyword searching functionality
+  - Multi-threading
