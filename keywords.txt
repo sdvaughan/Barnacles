@@ -1,0 +1,4 @@
+netflix
+microsoft
+google
+apple
