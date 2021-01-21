@@ -13,7 +13,7 @@ This can be especially useful for:
     ...and much more!
     
 TODO:
-  - Use list of keywords from user-provided file
   - Configure cURL requests with proxy (if requested by user)
+  - ~~Use list of keywords from user-provided file~~
   - ~~Keyword searching functionality~~
   - ~~Multi-threading~~
